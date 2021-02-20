@@ -22,14 +22,30 @@ namespace FormatarPontosGPS
             string sourceFilePath = Console.ReadLine();
             string path = Path.GetDirectoryName(sourceFilePath);
             string targetDirectoryPath = path + @"\Pontos_Formatados";
+            string fileName = @"\Pontos_Formatados.txt";
+            string targetFilePath = targetDirectoryPath + fileName;
 
             try {
                 Directory.CreateDirectory(targetDirectoryPath);
-                string targetFilePath = targetDirectoryPath + @"\Pontos_Formatados.txt";
-
+                FileInfo info = new FileInfo(targetDirectoryPath + fileName);               
+                if (info.Exists) {
+                    Console.WriteLine();
+                    Console.WriteLine("Arquivo existente! Caminho: " + targetFilePath);
+                    Console.WriteLine("Deseja sobrescrever o arquivo? Digite (1) - Sim ou (2) - Não ");
+                    int opc = int.Parse(Console.ReadLine());                    
+                    if (opc > 2 || opc < 1) {
+                        Console.WriteLine("Opção Inválida! Digite (1) - Sim ou (2) - Não");
+                        opc = int.Parse(Console.ReadLine());
+                    } else if (opc == 2) {
+                        Console.WriteLine();
+                        Console.WriteLine("Operação não realizada.");
+                        Console.WriteLine("Pressione qualquer tecla para finalizar ...");
+                        Console.ReadKey();
+                        Environment.Exit(0);
+                    }                    
+                }
                 string[] lines = File.ReadAllLines(sourceFilePath);
-
-                using (StreamWriter sw = File.AppendText(targetFilePath)) {
+                using (StreamWriter sw = File.CreateText(targetFilePath)) {
                     foreach (string line in lines) {
                         string line1 = line.Trim('"');
                         string[] item = line1.Split(' ');
@@ -42,7 +58,7 @@ namespace FormatarPontosGPS
                             for (int i = 5; i < item.Length; i++) {
                                 descricao += " " + item[i].TrimStart('"').TrimEnd('"');
                             }
-                        }                        
+                        }
                         PontoGps pontoGps = new PontoGps(ponto, x, y, z, descricao);
                         sw.WriteLine(                            
                             pontoGps.Ponto + " " + "\t" +
