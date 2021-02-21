@@ -13,6 +13,7 @@ namespace FormatarPontosGPS.Entities
         public string Descricao { get; set; }
 
         public PontoGps() { }
+        
         public PontoGps(int ponto, double x, double y, double z, string descricao) {
             Ponto = ponto;
             X = x;
